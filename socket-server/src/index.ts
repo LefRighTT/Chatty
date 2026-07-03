@@ -11,7 +11,7 @@ const io = new Server(httpServer, {
   cors: {
     origin: [
       "http://localhost:3000",
-      process.env.NEXTJS_URL || "",
+      "https://real-time-chat-app-xcrh.vercel.app",
     ],
     methods: ["GET", "POST"],
     credentials: true,
