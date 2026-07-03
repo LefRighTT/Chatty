@@ -9,7 +9,10 @@ const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.NEXTJS_URL || "http://localhost:3000",
+    origin: [
+      "http://localhost:3000",
+      process.env.NEXTJS_URL || "",
+    ],
     methods: ["GET", "POST"],
     credentials: true,
   },
