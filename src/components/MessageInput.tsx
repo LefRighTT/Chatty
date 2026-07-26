@@ -27,12 +27,12 @@ export default function MessageInput({ onSend, onTyping }: Props) {
           onTyping();
         }}
         placeholder="Type a message..."
-        className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-900"
+        className="flex-1 rounded-full border border-border-subtle bg-background-card px-4 py-2.5 text-sm text-foreground placeholder:text-foreground-muted focus:border-accent-amber focus:outline-none"
       />
       <button
         type="submit"
         disabled={!content.trim()}
-        className="px-4 py-2 bg-gray-900 text-white rounded-full hover:bg-gray-700 disabled:opacity-50 transition"
+        className="rounded-full bg-accent-amber px-5 py-2.5 text-sm font-medium text-background transition hover:bg-accent-amber-hover disabled:opacity-40"
       >
         Send
       </button>

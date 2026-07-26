@@ -3,6 +3,7 @@ import { redirect, notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import ChatRoom from "@/components/ChatRoom";
 import { joinRoom } from "@/app/actions/rooms";
+import RoomInvite from "@/components/RoomInvite";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -40,21 +41,48 @@ export default async function RoomPage({ params }: Props) {
   const room = await getRoom(id);
   if (!room) notFound();
 
-  // Auto-join the room if not already a member
-  await joinRoom(id);
+  // Private rooms: only members should land here. A non-member hitting a
+  // private room's URL directly gets redirected back, rather than silently
+  // auto-joining like public rooms do.
+  if (room.isPrivate) {
+    const alreadyMember = await prisma.roomMember.findUnique({
+      where: {
+        userId_roomId: { userId: session.user.id, roomId: room.id },
+      },
+    });
+    if (!alreadyMember) redirect("/rooms");
+  } else {
+    // Auto-join for public rooms only
+    await joinRoom(id);
+  }
 
   return (
     <main className="flex flex-col h-screen max-w-3xl mx-auto">
-      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+      <div className="flex items-center justify-between border-b border-border-subtle px-6 py-4">
         <div>
-          <h1 className="font-bold text-lg">{room.name}</h1>
-          <p className="text-sm text-gray-500">
+          <div className="flex items-center gap-2">
+            <h1 className="font-[family-name:var(--font-display)] text-lg text-foreground">
+              {room.name}
+            </h1>
+            {room.isPrivate && (
+              <span className="rounded-full border border-border-subtle px-2 py-0.5 font-mono text-[10px] uppercase tracking-wide text-foreground-muted">
+                Private
+              </span>
+            )}
+          </div>
+          <p className="text-sm text-foreground-muted">
             {room.members.length} members
           </p>
         </div>
-        <a href="/rooms" className="text-sm text-gray-500 hover:text-gray-900">
-          ← All rooms
-        </a>
+        <div className="flex items-center gap-3">
+          <RoomInvite roomId={room.id} inviteCode={room.inviteCode ?? "—"} />
+          <a
+            href="/rooms"
+            className="text-sm text-foreground-muted hover:text-foreground"
+          >
+            ← All rooms
+          </a>
+        </div>
       </div>
 
       <ChatRoom

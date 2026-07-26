@@ -6,6 +6,10 @@ export async function handleSignIn() {
   await signIn("github");
 }
 
+export async function handleGoogleSignIn() {
+  await signIn("google");
+}
+
 export async function handleSignOut() {
   await signOut();
 }

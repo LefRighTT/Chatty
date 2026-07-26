@@ -52,7 +52,7 @@ export default function ChatRoom({
   return (
     <>
       {/* Status + members row */}
-      <div className="px-6 py-2 flex items-center justify-between border-b border-gray-100">
+      <div className="flex items-center justify-between border-b border-border-subtle px-6 py-3">
         <div className="flex -space-x-2">
           {members.slice(0, 5).map((member, i) => (
             <img
@@ -60,28 +60,40 @@ export default function ChatRoom({
               src={member.user.image ?? ""}
               alt={member.user.name ?? ""}
               title={member.user.name ?? ""}
-              className="w-6 h-6 rounded-full border-2 border-white"
+              className="presence-glow h-7 w-7 rounded-full"
             />
           ))}
           {members.length > 5 && (
-            <div className="w-6 h-6 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs text-gray-600">
+            <div className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-background bg-background-card text-xs text-foreground-muted">
               +{members.length - 5}
             </div>
           )}
         </div>
-        {connected ? (
-          <span className="text-xs text-green-500">● Connected</span>
-        ) : (
-          <span className="text-xs text-red-500">● Connecting...</span>
-        )}
+        <span
+          className={`flex items-center gap-1.5 font-mono text-xs uppercase tracking-wide ${
+            connected ? "text-accent-amber" : "text-accent-coral"
+          }`}
+        >
+          <span
+            className={`h-1.5 w-1.5 rounded-full ${
+              connected ? "bg-accent-amber" : "bg-accent-coral"
+            }`}
+          />
+          {connected ? "Connected" : "Connecting..."}
+        </span>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+      <div className="flex-1 space-y-4 overflow-y-auto px-6 py-4">
         {messages.length === 0 ? (
-          <p className="text-center text-gray-400 mt-12">
-            No messages yet. Say something!
-          </p>
+          <div className="mt-16 flex flex-col items-center gap-1 text-center">
+            <p className="font-[family-name:var(--font-display)] text-lg italic text-foreground">
+              It's quiet in here.
+            </p>
+            <p className="text-sm text-foreground-muted">
+              Say something to light the room up.
+            </p>
+          </div>
         ) : (
           messages.map((message) => {
             const isMe = message.senderId === userId;
@@ -93,17 +105,17 @@ export default function ChatRoom({
                 <img
                   src={message.sender.image ?? ""}
                   alt={message.sender.name ?? ""}
-                  className="w-8 h-8 rounded-full flex-shrink-0"
+                  className="h-8 w-8 flex-shrink-0 rounded-full"
                 />
                 <div
-                  className={`max-w-xs px-4 py-2 rounded-2xl text-sm ${
+                  className={`max-w-xs rounded-2xl px-4 py-2 text-sm ${
                     isMe
-                      ? "bg-gray-900 text-white"
-                      : "bg-gray-100 text-gray-900"
+                      ? "bg-accent-amber text-background"
+                      : "border border-border-subtle bg-background-card text-foreground"
                   }`}
                 >
                   {!isMe && (
-                    <p className="text-xs font-medium mb-1 text-gray-500">
+                    <p className="mb-1 text-xs font-medium text-accent-amber">
                       {message.sender.name}
                     </p>
                   )}
@@ -114,7 +126,7 @@ export default function ChatRoom({
           })
         )}
         {typingUser && (
-          <p className="text-xs text-gray-400 italic">
+          <p className="text-xs italic text-foreground-muted">
             {typingUser} is typing...
           </p>
         )}
@@ -122,7 +134,7 @@ export default function ChatRoom({
       </div>
 
       {/* Input */}
-      <div className="px-6 py-4 border-t border-gray-200">
+      <div className="border-t border-border-subtle px-6 py-4">
         <MessageInput onSend={sendMessage} onTyping={handleTyping} />
       </div>
     </>

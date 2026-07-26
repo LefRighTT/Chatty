@@ -17,6 +17,7 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  password      String?
   rooms         RoomMember[]
   messages      Message[]
   accounts      Account[]
@@ -25,11 +26,14 @@ model User {
 }
 
 model Room {
-  id        String       @id @default(cuid())
-  name      String
-  members   RoomMember[]
-  messages  Message[]
-  createdAt DateTime     @default(now())
+  id          String       @id @default(cuid())
+  name        String
+  description String?
+  isPrivate   Boolean      @default(false)
+  inviteCode  String?      @unique
+  members     RoomMember[]
+  messages    Message[]
+  createdAt   DateTime     @default(now())
 }
 
 model RoomMember {
