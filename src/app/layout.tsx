@@ -22,8 +22,8 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "Realtime Chat App",
-  description: "A realtime chat application",
+  title: "Chatty",
+  description: "Chatty, a realtime chat app",
 };
 
 export default function RootLayout({

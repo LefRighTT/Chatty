@@ -71,7 +71,7 @@ export default function AuthCard({ initialError }: Props) {
           {view === "signin" ? "Live now" : "Join in"}
         </p>
         <h1 className="font-[family-name:var(--font-display)] text-3xl italic text-foreground">
-          {view === "signin" ? "Realtime Chat" : "Create your account"}
+          {view === "signin" ? "Chatty" : "Create your account"}
         </h1>
         <p className="text-sm text-foreground-muted">
           {view === "signin"

@@ -1,14 +1,10 @@
-# Real-Time Chat App
+# Chatty
 
-A full-stack real-time chat application built with Next.js 14, Socket.io, PostgreSQL, and Prisma 7. Users can sign in with GitHub, create chat rooms, and exchange messages instantly with typing indicators and persistent message history.
+Chatty is a full-stack real-time chat application built with Next.js 16, Socket.io, PostgreSQL, and Prisma 7. Users can sign in with GitHub, create chat rooms, and exchange messages instantly with typing indicators and persistent message history.
 
 ## Live Demo
 
 > Coming soon (deploying to Vercel + Render)
-
-## Screenshots
-
-> Add screenshots here after deployment
 
 ## Features
 
@@ -110,7 +106,7 @@ npm run dev
 Visit `http://localhost:3000`
 
 ## Project Structure
-realtime-chat-app/
+chatty/
 ├── src/
 │   ├── app/
 │   │   ├── api/auth/     # NextAuth routes
