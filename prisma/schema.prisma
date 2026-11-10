@@ -11,39 +11,81 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
 model User {
-  id            String    @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?      @unique
   emailVerified DateTime?
   image         String?
   password      String?
   rooms         RoomMember[]
+  createdRooms  Room[]       @relation("RoomCreator")
   messages      Message[]
   accounts      Account[]
   sessions      Session[]
-  createdAt     DateTime  @default(now())
+  createdAt     DateTime     @default(now())
 }
 
 model Room {
-  id          String       @id @default(cuid())
+  id          String         @id @default(cuid())
   name        String
   description String?
-  isPrivate   Boolean      @default(false)
-  inviteCode  String?      @unique
+  isPrivate   Boolean        @default(false)
+  // false = people join instantly; true = creator must approve each request
+  requireApproval Boolean    @default(false)
+  inviteCode  String?        @unique
+  creatorId   String?
+  creator     User?          @relation("RoomCreator", fields: [creatorId], references: [id], onDelete: SetNull)
   members     RoomMember[]
   messages    Message[]
-  createdAt   DateTime     @default(now())
+  questions   JoinQuestion[]
+  createdAt   DateTime       @default(now())
+
+  @@index([creatorId])
+}
+
+enum MemberStatus {
+  ACTIVE
+  PENDING
 }
 
 model RoomMember {
-  id     String @id @default(cuid())
-  userId String
-  roomId String
-  user   User   @relation(fields: [userId], references: [id])
-  room   Room   @relation(fields: [roomId], references: [id])
+  id      String       @id @default(cuid())
+  userId  String
+  roomId  String
+  user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room    Room         @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  answers JoinAnswer[]
+  // PENDING = applied to a "needs approval" room, not in the room yet
+  status  MemberStatus @default(ACTIVE)
 
   @@unique([userId, roomId])
+}
+
+// A question the room creator asks people who want to join.
+// A room with zero questions has no join form.
+model JoinQuestion {
+  id       String       @id @default(cuid())
+  roomId   String
+  label    String
+  required Boolean      @default(false)
+  position Int          @default(0)
+  room     Room         @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  answers  JoinAnswer[]
+
+  @@index([roomId, position])
+}
+
+model JoinAnswer {
+  id         String       @id @default(cuid())
+  memberId   String
+  questionId String
+  value      String
+  member     RoomMember   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  question   JoinQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([memberId, questionId])
 }
 
 model Message {
@@ -51,12 +93,13 @@ model Message {
   content   String
   roomId    String
   senderId  String
-  room      Room     @relation(fields: [roomId], references: [id])
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
   sender    User     @relation(fields: [senderId], references: [id])
   createdAt DateTime @default(now())
 
   @@index([roomId, createdAt])
 }
+
 model Account {
   id                String  @id @default(cuid())
   userId            String
