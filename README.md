@@ -4,7 +4,7 @@ Chatty is a full-stack real-time chat application built with Next.js 16, Socket.
 
 ## Live Demo
 
-> Coming soon (deploying to Vercel + Render)
+https://real-time-chat-app-xcrh.vercel.app/
 
 ## Features
 
@@ -105,29 +105,6 @@ npm run dev
 
 Visit `http://localhost:3000`
 
-## Project Structure
-chatty/
-├── src/
-│   ├── app/
-│   │   ├── api/auth/     # NextAuth routes
-│   │   ├── rooms/        # Rooms list + individual room pages
-│   │   ├── actions/      # Server actions (auth, rooms)
-│   │   └── page.tsx      # Home/login page
-│   ├── components/
-│   │   ├── ChatRoom.tsx  # Real-time chat UI
-│   │   └── MessageInput.tsx
-│   ├── hooks/
-│   │   └── useSocket.ts  # Socket.io client hook
-│   └── lib/
-│       └── prisma.ts     # Prisma client singleton
-├── socket-server/        # Standalone Socket.io server
-│   └── src/
-│       └── index.ts
-├── prisma/
-│   └── schema.prisma
-└── .github/
-└── workflows/
-└── ci.yml
 ## Key Technical Decisions
 
 **Separate socket server** — Vercel's serverless functions don't support persistent WebSocket connections, so the Socket.io server runs as a standalone Node/Express process deployed to Render.
