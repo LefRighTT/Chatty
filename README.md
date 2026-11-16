@@ -29,12 +29,6 @@ https://real-time-chat-app-xcrh.vercel.app/
 | Deployment | Vercel (app), Render (socket server) |
 | CI/CD | GitHub Actions |
 
-## Architecture
-Client (Next.js)
-├── REST API routes → PostgreSQL via Prisma
-└── Socket.io-client → Socket Server (Node/Express)
-└── PostgreSQL via Prisma
-
 ## Getting Started
 
 ### Prerequisites
